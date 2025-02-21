@@ -3,7 +3,6 @@ $(document).ready(function() {
         e.preventDefault();
         console.log('click');
       
-
         // Validate form fields
         const fullname = $('#fullname').val().trim();
         const email = $('#email').val().trim();
@@ -33,10 +32,9 @@ $(document).ready(function() {
             return;
         }
 
-   
         // Prepare data to send
         const data = {
-            full_name: fullname,
+            fullname: fullname,  // Corrected key here
             email: email,
             password: password
         };
@@ -49,15 +47,19 @@ $(document).ready(function() {
             data: JSON.stringify(data),
             success: function(response) {
                console.log(response);
-               if(response.status=="success"){
+               if(response.status === "success") {
                     alertify.success(response.message);
                     setTimeout(function () {
                         window.location.href = "/login"; 
-                      }, 1000);
-               }else if(response.status=="error"){
+                    }, 1000);
+               } else if(response.status === "error") {
                     alertify.error(response.message);
                }
             },
+            error: function(xhr, status, error) {
+                console.error("AJAX error: ", status, error);
+                alertify.error("There was an error processing your request. Please try again.");
+            }
         });
     });
 });

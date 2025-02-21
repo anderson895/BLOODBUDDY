@@ -1,46 +1,51 @@
-import hashlib, sqlite3
-from database import *
+import hashlib
 import json
-
+import psycopg2
+from psycopg2.extras import RealDictCursor
+from database import Database
 
 class Patients(Database):
-    def createPatientAccount_table(self):
-        self.cursor.execute('''
+    def __init__(self):
+        """Initializes the Patients class and ensures the database connection is established."""
+        super().__init__()  # Calls the parent class's constructor, which connects to the DB
+
+    def create_patient_account_table(self):
+        """Creates the patient_account table in PostgreSQL."""
+        self.execute_query('''
             CREATE TABLE IF NOT EXISTS patient_account (
-                patient_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                fullname TEXT,
+                patient_id SERIAL PRIMARY KEY,
+                fullname TEXT NOT NULL,
                 email TEXT NOT NULL UNIQUE,
                 password TEXT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         ''')
-        self.conn.commit()  # Commit table creation 
+        print("✅ Table `patient_account` is ready.")
 
     def email_exists(self, email):
-        """ Check if the email already exists in the database """
-        self.cursor.execute("SELECT email FROM patient_account WHERE email = ?", (email,))
-        return self.cursor.fetchone() is not None  # Returns True if email exists
+        """Checks if the email already exists in the database."""
+        result = self.fetch_one("SELECT email FROM patient_account WHERE email = %s", (email,))
+        return result is not None  # Returns True if email exists
 
-    def createPatientAccount(self, fullname, email, password):
-        """ Create a new patient account only if email is unique """
+    def create_patient_account(self, fullname, email, password):
+        """Creates a new patient account only if email is unique."""
         if self.email_exists(email):
-            print(f"Error: The email '{email}' is already in use.")
+            print(f"❌ Error: The email '{email}' is already in use.")
             return False
 
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+        hashed_password = self.hash_password(password)
 
         try:
-            self.cursor.execute('''
+            self.execute_query('''
                 INSERT INTO patient_account (fullname, email, password)
-                VALUES (?, ?, ?)
+                VALUES (%s, %s, %s)
             ''', (fullname, email, hashed_password))
-            self.conn.commit()
-            print("Account created successfully")
+            print("✅ Account created successfully")
             return True
-        except sqlite3.Error as e:
-            print("Error creating account:", e)
+        except psycopg2.Error as e:
+            print("❌ Error creating account:", e)
             return False
-        
+
     def hash_password(self, password):
         """Hashes the password using SHA-256."""
         return hashlib.sha256(password.encode()).hexdigest()
@@ -49,36 +54,27 @@ class Patients(Database):
         """Checks if the email and password combination exists in the database."""
         hashed_password = self.hash_password(password)
 
-        self.cursor.execute('''
+        result = self.fetch_one('''
             SELECT COUNT(*) FROM patient_account
-            WHERE email = ? AND password = ?
+            WHERE email = %s AND password = %s
         ''', (email, hashed_password))
 
-        result = self.cursor.fetchone()
-        return result[0] > 0  # True if exists, False otherwise
+        return result['count'] > 0 if result else False
 
     def search_patient_session(self, email, password):
         """Retrieves patient details if login credentials are valid."""
         hashed_password = self.hash_password(password)
 
-        # Fetch relevant patient account details (excluding password)
-        self.cursor.execute('''
+        result = self.fetch_one('''
             SELECT patient_id, fullname, email, created_at FROM patient_account
-            WHERE email = ? AND password = ?
+            WHERE email = %s AND password = %s
         ''', (email, hashed_password))
-        
-        result = self.cursor.fetchone()
 
         # Prepare the response data
         if result:
             response_data = {
                 'success': True,
-                'account': {
-                    'patient_id': result[0],
-                    'fullname': result[1],
-                    'email': result[2],
-                    'created_at': result[3]  # Removed password for security
-                }
+                'account': result
             }
         else:
             response_data = {
@@ -86,16 +82,8 @@ class Patients(Database):
                 'message': 'Incorrect Email or Password'
             }
 
-        return json.dumps(response_data)
+        return json.dumps(response_data, default=str)
 
-if __name__ == "__main__":
-    patients = Patients()
-    patients.createPatientAccount_table()
-    
-    # Test creating an account
-    patients.createPatientAccount('Juan Dela Cruz', 'admin@gmail.com', 'password1234')
-    
-    # Try creating the same account again (should show an error)
-    patients.createPatientAccount('Juan Dela Cruz', 'admin@gmail.com', 'password5678')
-    
-    patients.close()  # Close the database connection
+    def close(self):
+        """Close the database connection properly when done."""
+        super().close()  # Calls the parent class's close method

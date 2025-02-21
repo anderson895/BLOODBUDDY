@@ -1,13 +1,51 @@
-import sqlite3
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import os
 
 class Database:
-    def __init__(self, db_name='bloodybuddy.db'):
-        self.conn = sqlite3.connect(db_name)
-        self.conn.row_factory = sqlite3.Row  # Set the row factory for dictionary-like rows
-        self.cursor = self.conn.cursor()
+    def __init__(self):
+        self.conn = None
+        self.cursor = None
+        self.connect()
 
-    def commit(self):
-        self.conn.commit()
+    def connect(self):
+        """Establish a connection to the database."""
+        DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres.vgdifuwzjwlowxbwcsbz:Bloodbuddy@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres")
+        try:
+            self.conn = psycopg2.connect(DATABASE_URL)
+            self.cursor = self.conn.cursor(cursor_factory=RealDictCursor)
+            print("✅ Successfully connected to the database.")
+        except psycopg2.Error as e:
+            print(f"❌ Database connection error: {e}")
+            self.conn = None
+            self.cursor = None
+
+    def execute_query(self, query, params=()):
+        """Executes a query and commits if needed."""
+        if not self.cursor:
+            self.connect()
+        try:
+            self.cursor.execute(query, params)
+            self.conn.commit()
+            return self.cursor
+        except psycopg2.Error as e:
+            print(f"❌ Database error: {e}")
+            return None
+
+    def fetch_all(self, query, params=()):
+        """Executes a query and returns all results."""
+        cursor = self.execute_query(query, params)
+        return cursor.fetchall() if cursor else []
+
+    def fetch_one(self, query, params=()):
+        """Executes a query and returns a single result."""
+        cursor = self.execute_query(query, params)
+        return cursor.fetchone() if cursor else None
 
     def close(self):
-        self.conn.close()
+        """Closes the database connection."""
+        if self.cursor:
+            self.cursor.close()
+        if self.conn:
+            self.conn.close()
+            print("🔌 Database connection closed.")
