@@ -1,4 +1,15 @@
 $(document).ready(function() {
+
+    $('#terms').change(function() {
+        if ($(this).prop('checked')) {
+            $('#btnSignup').prop('disabled', false);
+        } else {
+            $('#btnSignup').prop('disabled', true);
+        }
+    });
+
+
+
     $("#frmCreateAccount").submit(function (e) {
         e.preventDefault();
         $('.spinner').show();
