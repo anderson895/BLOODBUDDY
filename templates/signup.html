@@ -1,6 +1,6 @@
 {% include 'components/header.html' %}
 <body class="bg-white from-red-700 to-white min-h-screen flex flex-col">
-    
+    {% include 'PageSpinner.html' %}
      <!-- Navbar -->
      <nav class="bg-[#a22133] text-white py-4 px-8 flex justify-between items-center shadow-lg">
         <div class="flex items-center space-x-3">
@@ -42,6 +42,14 @@
     </p>
 
     <form id="frmCreateAccount" class="mt-6">
+
+        <div class="spinner" id="spinner" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;">
+            <div class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
+                <div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        </div>
+
+
         <div class="mb-4">
             <label class="block text-red-700 font-semibold">Full Name</label>
             <input type="text" placeholder="Samira Hadid" id="fullname"  name="fullname"

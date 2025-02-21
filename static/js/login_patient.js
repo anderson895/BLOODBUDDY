@@ -1,17 +1,23 @@
 $(document).ready(function() {
     $("#frmLogin_patient").submit(function(e) {
         e.preventDefault();
-        console.log('login');
+        $('.spinner').show();
+        $('#btnSignup').prop('disabled', true);
 
+        
         const email = $('#login_patient_email').val().trim();
         const password = $('#login_patient_password').val().trim();
 
         if (!email) {
             alertify.error("Please Enter Email.");
+            $('.spinner').hide();
+            $('#btnSignup').prop('disabled', false);
             return;
         }
         if (!password) {
             alertify.error("Please Enter Password");
+            $('.spinner').hide();
+            $('#btnSignup').prop('disabled', false);
             return;
         }
 
@@ -38,6 +44,8 @@ $(document).ready(function() {
                     }, 1000);
                 } else if (response.status === "error") {
                     alertify.error(response.message);
+                    $('.spinner').hide();
+                    $('#btnSignup').prop('disabled', false);
                 }
             },
             error: function(xhr, status, error) {

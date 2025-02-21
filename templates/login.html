@@ -1,6 +1,6 @@
 {% include 'components/header.html' %}
 <body class="bg-white from-red-700 to-white min-h-screen flex flex-col">
-    
+    {% include 'PageSpinner.html' %}
     <!-- Navbar -->
     <nav class="bg-[#a22133] text-white py-4 px-8 flex justify-between items-center shadow-lg">
         <div class="flex items-center space-x-3">
@@ -40,6 +40,15 @@
         <p class="text-center text-gray-600">Don't have an account yet? <a href="/signup" class="text-red-600 font-semibold">Sign Up</a></p>
         
         <form id="frmLogin_patient" class="mt-6">
+
+           <!-- Spinner -->
+            <div class="spinner"  style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;">
+                <div class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
+                    <div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            </div>
+
+
             <div class="mb-4 relative">
                 <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-red-600">person</span>
                 <input type="text" id="login_patient_email" name="email" placeholder="Email" class="w-full pl-10 p-3 border border-red-600 rounded-lg focus:ring focus:ring-red-300 outline-none">
@@ -67,7 +76,7 @@
                 <a href="#" class="text-red-600 font-semibold">Forgot Password?</a>
             </div>
             
-            <button type="submit" class="w-full bg-red-700 text-white py-3 rounded-lg text-lg font-semibold shadow-md hover:bg-red-800">LOGIN</button>
+            <button type="submit" id="btnLogin_patient" class="w-full bg-red-700 text-white py-3 rounded-lg text-lg font-semibold shadow-md hover:bg-red-800">LOGIN</button>
         </form>
     </div>
 </div>

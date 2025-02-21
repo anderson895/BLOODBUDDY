@@ -1,7 +1,8 @@
 $(document).ready(function() {
     $("#frmCreateAccount").submit(function (e) {
         e.preventDefault();
-        console.log('click');
+        $('.spinner').show();
+        $('#btnSignup').prop('disabled', true);
       
         // Validate form fields
         const fullname = $('#fullname').val().trim();
@@ -11,16 +12,27 @@ $(document).ready(function() {
         // Basic validation
         if (!fullname) {
             alertify.error("Please Enter Fullname.");
+
+            $('.spinner').hide();
+            $('#btnSignup').prop('disabled', false);
+
             return;
+           
         }
         // Basic validation
         if (!email) {
             alertify.error("Please Enter Email.");
+
+            $('.spinner').hide();
+            $('#btnSignup').prop('disabled', false);
             return;
         }
         // Basic validation
         if (!password) {
             alertify.error("Please Enter Password");
+
+            $('.spinner').hide();
+            $('#btnSignup').prop('disabled', false);
             return;
         }
 
@@ -28,7 +40,9 @@ $(document).ready(function() {
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailPattern.test(email)) {
             alertify.error("Please enter a valid email address.");
-            $('#email').addClass('is-invalid');
+
+            $('.spinner').hide();
+            $('#btnSignup').prop('disabled', false);
             return;
         }
 
@@ -54,6 +68,9 @@ $(document).ready(function() {
                     }, 1000);
                } else if(response.status === "error") {
                     alertify.error(response.message);
+
+                    $('.spinner').hide();
+                    $('#btnSignup').prop('disabled', false);
                }
             },
             error: function(xhr, status, error) {
