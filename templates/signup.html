@@ -41,22 +41,22 @@
         Do you have an account? <a href="#" class="text-red-600 font-semibold">Login</a>
     </p>
 
-    <form class="mt-6">
+    <form id="frmCreateAccount" class="mt-6">
         <div class="mb-4">
             <label class="block text-red-700 font-semibold">Full Name</label>
-            <input type="text" placeholder="Samira Hadid" 
+            <input type="text" placeholder="Samira Hadid" id="fullname"  name="fullname"
                 class="w-full p-3 border border-red-600 rounded-lg focus:ring focus:ring-red-300 outline-none placeholder-gray-500 italic">
         </div>
 
         <div class="mb-4">
             <label class="block text-red-700 font-semibold">Email Address</label>
-            <input type="email" placeholder="hello@reallygreatsite.com" 
+            <input type="text" placeholder="hello@reallygreatsite.com" id="email" name="email"
                 class="w-full p-3 border border-red-600 rounded-lg focus:ring focus:ring-red-300 outline-none placeholder-gray-500 italic">
         </div>
 
         <div class="mb-4 relative">
             <label class="block text-red-700 font-semibold">Password</label>
-            <input type="password" placeholder="********" 
+            <input type="password" placeholder="********" id="password" name="password"
                 class="w-full p-3 border border-red-600 rounded-lg focus:ring focus:ring-red-300 outline-none placeholder-gray-500 italic">
         </div>
 
@@ -65,7 +65,7 @@
             <label for="terms" class="ml-2 text-gray-700">I agree to the <a href="#" class="text-red-600 font-semibold">Terms & Conditions</a></label>
         </div>
 
-        <button class="w-full bg-red-700 text-white py-3 rounded-lg text-lg font-semibold shadow-md hover:bg-red-800 transition duration-300">
+        <button type="submit" id="btnSignup" class="w-full bg-red-700 text-white py-3 rounded-lg text-lg font-semibold shadow-md hover:bg-red-800 transition duration-300">
             SIGN UP
         </button>
     </form>
