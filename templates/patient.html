@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodBuddy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function toggleMenu() {
+            document.getElementById("mobile-menu").classList.toggle("hidden");
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-b from-red-700 to-white min-h-screen flex flex-col">
+    
+    <!-- Navbar -->
+    <nav class="bg-[#a22133] text-white py-4 px-8 flex justify-between items-center shadow-lg">
+        <div class="flex items-center space-x-3">
+            <img src="/static/ELEMENTS/LOGO.png" alt="BloodBuddy Logo" class="h-10">
+            <span class="text-xl font-bold tracking-wide">BLOODBUDDY</span>
+        </div>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex space-x-6 items-center">
+            <a href="#" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300">HOME</a>
+            <a href="#" class="text-white hover:underline">ABOUT</a>
+            <a href="#" class="text-white hover:underline">LOGIN</a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="md:hidden focus:outline-none" onclick="toggleMenu()">
+            <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu (Hidden by Default) -->
+    <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-[#a22133] text-white text-center py-4 space-y-4">
+        <a href="#" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300 mx-6">HOME</a>
+        <a href="#" class="hover:underline">ABOUT</a>
+        <a href="#" class="hover:underline">LOGIN</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative flex flex-col items-center text-center py-20 px-4 flex-grow bg-cover bg-center" style="background-image: url('/static/ELEMENTS/background.png');">
+    </section>
+
+</body>
+</html>
