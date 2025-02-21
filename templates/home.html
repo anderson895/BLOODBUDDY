@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BloodBuddy</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        function toggleMenu() {
-            document.getElementById("mobile-menu").classList.toggle("hidden");
-        }
-    </script>
-</head>
+{% include 'components/header.html' %}
 <body class="bg-gradient-to-b from-red-700 to-white min-h-screen flex flex-col">
     
     <!-- Navbar -->
@@ -22,9 +10,9 @@
 
         <!-- Desktop Menu -->
         <div class="hidden md:flex space-x-6 items-center">
-            <a href="#" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300">HOME</a>
-            <a href="#" class="text-white hover:underline">ABOUT</a>
-            <a href="#" class="text-white hover:underline">LOGIN</a>
+            <a href="/" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300">HOME</a>
+            <a href="/about" class="text-white hover:underline">ABOUT</a>
+            <a href="/login" class="text-white hover:underline">LOGIN</a>
         </div>
 
         <!-- Mobile Menu Button -->
@@ -37,14 +25,17 @@
 
     <!-- Mobile Menu (Hidden by Default) -->
     <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-[#a22133] text-white text-center py-4 space-y-4">
-        <a href="#" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300 mx-6">HOME</a>
-        <a href="#" class="hover:underline">ABOUT</a>
-        <a href="#" class="hover:underline">LOGIN</a>
+      
+        <a href="/" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300 mx-6">HOME</a>
+        <a href="/about" class="hover:underline">ABOUT</a>
+        <a href="/login" class="hover:underline">LOGIN</a>
     </div>
 
+
+
+    <!--START PAGE CONTENT  -->
     <!-- Hero Section -->
     <section class="relative flex flex-col items-center text-center py-20 px-4 flex-grow bg-cover bg-center" style="background-image: url('/static/ELEMENTS/background.png');">
     </section>
-
-</body>
-</html>
+    <!--END PAGE CONTENT  -->
+{% include 'components/footer.html' %}

@@ -1,0 +1,72 @@
+{% include 'components/header.html' %}
+<body class="bg-white from-red-700 to-white min-h-screen flex flex-col">
+    
+    <!-- Navbar -->
+    <nav class="bg-[#a22133] text-white py-4 px-8 flex justify-between items-center shadow-lg">
+        <div class="flex items-center space-x-3">
+            <img src="/static/ELEMENTS/LOGO.png" alt="BloodBuddy Logo" class="h-10">
+            <span class="text-xl font-bold tracking-wide">BLOODBUDDY</span>
+        </div>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex space-x-6 items-center">
+            <a href="/" class="text-white hover:underline">HOME</a>
+            <a href="/about" class="text-white hover:underline">ABOUT</a>
+            <a href="/login" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300">LOGIN</a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="md:hidden focus:outline-none" onclick="toggleMenu()">
+            <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu (Hidden by Default) -->
+    <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-[#a22133] text-white text-center py-4 space-y-4">
+        <a href="/" class="hover:underline">HOME</a>
+        <a href="/about" class="hover:underline">ABOUT</a>
+        <a href="/login" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300 mx-6">LOGIN</a>
+    </div>
+
+
+
+
+    <!--START PAGE CONTENT  -->
+<div class="flex justify-center items-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+        <h2 class="text-2xl font-bold text-center text-red-700">LOGIN</h2>
+        <p class="text-center text-gray-600">Don't have an account yet? <a href="/signup" class="text-red-600 font-semibold">Sign Up</a></p>
+        
+        <form class="mt-6">
+            <div class="mb-4 relative">
+                <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-red-600">person</span>
+                <input type="text" placeholder="Username or Email" class="w-full pl-10 p-3 border border-red-600 rounded-lg focus:ring focus:ring-red-300 outline-none">
+            </div>
+            
+            <div class="mb-4 relative">
+                <span class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-red-600">lock</span>
+                <input type="password" placeholder="Password" class="w-full pl-10 p-3 border border-red-600 rounded-lg focus:ring focus:ring-red-300 outline-none">
+               
+            </div>
+            
+            <div class="flex items-center justify-between mb-4">
+                <label class="flex items-center text-gray-700">
+                    <input type="checkbox" class="text-red-600 form-checkbox h-4 w-4">
+                    <span class="ml-2">Keep me logged in</span>
+                </label>
+                <a href="#" class="text-red-600 font-semibold">Forgot Password?</a>
+            </div>
+            
+            <button class="w-full bg-red-700 text-white py-3 rounded-lg text-lg font-semibold shadow-md hover:bg-red-800">LOGIN</button>
+        </form>
+    </div>
+</div>
+<!--END PAGE CONTENT  -->
+
+
+
+
+
+{% include 'components/footer.html' %}
