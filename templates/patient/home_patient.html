@@ -3,7 +3,7 @@
 
 <!-- <pre>{{ session | tojson(indent=4) }}</pre> -->
 
-<body class="bg-gradient-to-b from-red-700 to-white min-h-screen flex flex-col">
+<body class="bg-white from-red-700 to-white min-h-screen flex flex-col">
     
     <!-- Navbar -->
     <nav class="bg-[#a22133] text-white py-4 px-8 flex justify-between items-center shadow-lg">
@@ -60,8 +60,182 @@
 </body>
 
 
-<!--START PAGE CONTENT  -->
-<!--END PAGE CONTENT  -->
+
+<!-- START PAGE CONTENT -->
+<div class="flex justify-center items-center h-screen">
+    <div id="form-container" class="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
+        <h1 class="text-2xl font-bold text-red-700 italic">FIND YOUR MATCH INSTANTLY!</h1>
+        <p class="text-gray-600 mt-2">Enter your blood type to see donation and transfusion compatibility in seconds.</p>
+        <div class="mt-4">
+            <label for="blood-type" class="block text-gray-700 font-medium">Select your blood type:</label>
+            <select id="blood-type" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
+                <option value="">Select your blood type</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+        </div>
+        <p id="error-message" class="text-red-600 text-sm hidden mt-2">Please select a blood type.</p>
+        <button id="check-compatibility" class="mt-6 w-full bg-red-700 text-white font-bold py-3 rounded-md hover:bg-red-800 transition disabled:opacity-50" disabled>CHECK COMPATIBILITY</button>
+    </div>
+
+    <div id="result-container" class="hidden bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center" aria-live="polite">
+        <h1 id="result-title" class="text-2xl font-bold text-red-700 italic"></h1>
+        <div class="mt-4 border border-red-700 rounded-md">
+            <div class="grid grid-cols-2 bg-red-700 text-white font-bold">
+                <div class="p-3">BLOOD TYPES YOU CAN RECEIVE</div>
+                <div class="p-3">BLOOD TYPES YOU CAN DONATE TO</div>
+            </div>
+            <div class="grid grid-cols-2 text-red-700 font-bold p-3">
+                <div id="receive-list"></div>
+                <div id="donate-list"></div>
+            </div>
+        </div>
+        <p class="mt-4 italic text-gray-600">Would you like to donate or receive blood?</p>
+        <div class="mt-4 flex justify-center space-x-4">
+            <button id="donate-button" class="bg-red-700 text-white font-bold py-2 px-4 rounded-md hover:bg-red-800 transition">DONATE</button>
+            <button class="bg-red-700 text-white font-bold py-2 px-4 rounded-md hover:bg-red-800 transition">RECEIVE</button>
+            <button id="reset" class="bg-gray-500 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600 transition">NOT TODAY</button>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+    
+<!-- DONOR FORM (Hidden by Default) -->
+<div id="donor-form" class="hidden bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
+    <h1 class="text-2xl font-bold text-red-700 italic  text-white p-3 rounded-md">HELLO, DONOR!</h1>
+    <p class="text-gray-600 italic mt-2">FILL UP THE INFORMATION BELOW:</p>
+
+    <div class="mt-4 text-left">
+        <label class="block text-red-700 font-bold">FULL NAME:</label>
+        <input type="text" id="donor-name" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
+
+        <label class="block text-red-700 font-bold mt-2">AGE:</label>
+        <input type="number" id="donor-age" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
+
+        <label class="block text-red-700 font-bold mt-2">CITY OF RESIDENCE:</label>
+        <input type="text" id="donor-city" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
+
+        <label class="block text-red-700 font-bold mt-2">CONTACT NUMBER:</label>
+        <input type="text" id="donor-contact" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
+
+        <label class="block text-red-700 font-bold mt-2">EMAIL ADDRESS:</label>
+        <input type="email" id="donor-email" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
+    </div>
+
+    <button id="confirm-donation" class="mt-6 w-full bg-red-700 text-white font-bold py-3 rounded-md hover:bg-red-800 transition">CONFIRM</button>
+    <button id="go-back" class="mt-2 w-full bg-gray-500 text-white font-bold py-3 rounded-md hover:bg-gray-600 transition">BACK</button>
+</div>
+
+
+
+
+
+</div>
+<!-- END PAGE CONTENT -->
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    $(document).ready(function() {
+        const bloodCompatibility = {
+            "A+": { receive: "A+, A-, O+, O-", donate: "A+, AB+" },
+            "A-": { receive: "A-, O-", donate: "A+, A-, AB+, AB-" },
+            "B+": { receive: "B+, B-, O+, O-", donate: "B+, AB+" },
+            "B-": { receive: "B-, O-", donate: "B+, B-, AB+, AB-" },
+            "AB+": { receive: "A+, A-, B+, B-, AB+, AB-, O+, O-", donate: "AB+" },
+            "AB-": { receive: "A-, B-, AB-, O-", donate: "AB+, AB-" },
+            "O+": { receive: "O+, O-", donate: "O+, A+, B+, AB+" },
+            "O-": { receive: "O-", donate: "O+, O-, A+, A-, B+, B-, AB+, AB-" }
+        };
+
+        // Enable/disable button based on selection
+        $("#blood-type").change(function() {
+            let bloodType = $(this).val();
+            $("#check-compatibility").prop("disabled", bloodType === "");
+            $("#error-message").hide();
+        });
+
+        // Check blood compatibility
+        $("#check-compatibility").click(function() {
+            let bloodType = $("#blood-type").val();
+            if (bloodType && bloodCompatibility[bloodType]) {
+                $("#result-title").text(`YOU ARE BLOOD TYPE ${bloodType} !`);
+                $("#receive-list").text(bloodCompatibility[bloodType].receive);
+                $("#donate-list").text(bloodCompatibility[bloodType].donate);
+                $("#form-container").fadeOut(300, function() {
+                    $("#result-container").fadeIn(300);
+                });
+            } else {
+                $("#error-message").fadeIn();
+            }
+        });
+
+        // Reset form
+        $("#reset").click(function() {
+            $("#result-container").fadeOut(300, function() {
+                $("#form-container").fadeIn(300);
+                $("#blood-type").val("");
+                $("#check-compatibility").prop("disabled", true);
+            });
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+  // Show Donor Form when Donate is clicked
+        $("#donate-button").click(function() {
+            $("#result-container").fadeOut(300, function() {
+                $("#donor-form").fadeIn(300);
+            });
+        });
+
+        // Hide Donor Form and go back
+        $("#go-back").click(function() {
+            $("#donor-form").fadeOut(300, function() {
+                $("#result-container").fadeIn(300);
+            });
+        });
+
+        // Handle donation confirmation
+        $("#confirm-donation").click(function() {
+            alert("Donation details submitted! Thank you for your willingness to donate.");
+        });
+
+
+
+
+
+    });
+</script>
 
 
 {% include '/components/footer.html' %}
