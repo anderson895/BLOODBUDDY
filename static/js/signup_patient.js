@@ -1,10 +1,12 @@
 $(document).ready(function() {
 
+    $('#btnSignup').addClass('bg-red-800');
+
     $('#terms').change(function() {
         if ($(this).prop('checked')) {
-            $('#btnSignup').prop('disabled', false);
+            $('#btnSignup').prop('disabled', false).removeClass('bg-red-800').addClass('bg-red-700');
         } else {
-            $('#btnSignup').prop('disabled', true);
+            $('#btnSignup').prop('disabled', true).removeClass('bg-red-700').addClass('bg-red-800');
         }
     });
 
