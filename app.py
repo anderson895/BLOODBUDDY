@@ -22,6 +22,17 @@ def about():
 def signup():
     return render_template('signup.html')
 
+@app.route('/patient/home_patient')
+def home_patient():
+    if 'patient_id' not in session:  
+        return redirect(url_for('logout')) 
+    return render_template('patient/home_patient.html', session=session)
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/login')
 
 
 
@@ -76,9 +87,9 @@ def post_login_patient():
 
             print(session_info)  # Optional: Debugging
 
-            return jsonify({'status': 'success'})  # Successful login response
+            return jsonify({'status': 'success', 'message': 'Login successfully'})  # Successful login response
         else:
-            return jsonify({'status': 'error', 'message': 'Login successfully'})
+            return jsonify({'status': 'error', 'message': session_info['message']})
 
     return jsonify({'status': 'error', 'message': 'Incorrect Email or Password'})  
 

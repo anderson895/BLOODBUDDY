@@ -29,11 +29,12 @@ $(document).ready(function() {
             data: JSON.stringify(formData),
             dataType: "json",
             success: function(response) {
-                console.log(response);
-                if (response.status === "success") {
+                
+                if (response.status == "success") {
+                    console.log(response);
                     alertify.success(response.message);
                     setTimeout(function() {
-                        window.location.href = "/patient/home_patient.html";
+                        window.location.href = "/patient/home_patient";
                     }, 1000);
                 } else if (response.status === "error") {
                     alertify.error(response.message);
