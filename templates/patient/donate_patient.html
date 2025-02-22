@@ -134,7 +134,7 @@
                     contentType: "application/json",
                     data: JSON.stringify({ donation_id: donationId }),
                     success: function() {
-                        alert("Donation removed successfully.");
+                        alertify.success("Donation removed successfully.");
                         fetchBloodList();
                     }
                 });
@@ -150,7 +150,7 @@
                     contentType: "application/json",
                     data: JSON.stringify({ donation_id: donationId }),
                     success: function() {
-                        alert("Donation marked as done.");
+                        alertify.success("Donation marked as done.");
                         fetchBloodList();
                     }
                 });
