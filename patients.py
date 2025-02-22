@@ -26,6 +26,21 @@ class Patients(Database):
         """Checks if the email already exists in the database."""
         result = self.fetch_one("SELECT email FROM patient_account WHERE email = %s", (email,))
         return result is not None  # Returns True if email exists
+    
+
+    def insert_donation(self,donor_id,donor_name, donor_age, donor_city,donor_contact,donor_email,donor_bloodtype):
+        try:
+            self.execute_query('''
+                INSERT INTO patient_donation (donor_id, donor_name, donor_age,donor_city,donor_contact,donor_email,donor_bloodtype)
+                VALUES (%s,%s, %s, %s,%s, %s, %s)
+            ''', (donor_id,donor_name, donor_age, donor_city,donor_contact,donor_email,donor_bloodtype))
+            print("✅ Donation Succesfully Recorded")
+            return True
+        except psycopg2.Error as e:
+            print("❌ Error creating account:", e)
+            return False
+
+
 
     def create_patient_account(self, fullname, email, password):
         """Creates a new patient account only if email is unique."""

@@ -21,6 +21,16 @@ def signup():
     return render_template('signup.html')
 
 
+@app.route('/patient/donation_success')
+def donation_success():
+    return render_template('/patient/donation_success.html')
+
+
+@app.route('/patient/about_patient')
+def about_patient():
+    return render_template('/patient/about_patient.html')
+
+
 @app.route('/patient/home_patient')
 def home_patient():
     if 'patient_id' not in session:  
@@ -33,6 +43,55 @@ def home_patient():
 def logout():
     session.clear()
     return redirect(url_for('login'))  # 🔄 Redirect to login page
+
+
+
+
+
+
+
+
+
+
+@app.route('/post_patient_donate', methods=['POST'])
+def post_patient_donate():
+    data = request.get_json()
+    donor_id = data.get('donor_id')
+    donor_name = data.get('donor_name')
+    donor_age = data.get('donor_age')
+    donor_city = data.get('donor_city')
+    donor_contact = data.get('donor_contact')
+    donor_email = data.get('donor_email')
+    donor_bloodtype = data.get('donor_bloodtype')
+
+    print(f"📩 Received Data: {data}")  # Debugging input data
+
+    patients = Patients()
+
+    
+
+    success = patients.insert_donation(donor_id,donor_name, donor_age, donor_city,donor_contact,donor_email,donor_bloodtype)
+    
+    if success:
+        print("✅ Donation Succesfully Recorded!")
+        return jsonify({'status': 'success', 'message': 'Donation Succesfully Recorded!'})
+    else:
+        print("❌ Failed to register user in Supabase. Check logs for errors.")
+        return jsonify({'status': 'error', 'message': 'Failed to register user!'})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/createPatientAccount', methods=['POST'])
 def createPatientAccount():

@@ -3,6 +3,8 @@
 
 <!-- <pre>{{ session | tojson(indent=4) }}</pre> -->
 
+
+
 <body class="bg-white from-red-700 to-white min-h-screen flex flex-col">
     {% include 'PageSpinner.html' %}
     <!-- Navbar -->
@@ -14,8 +16,8 @@
 
         <!-- Desktop Menu -->
         <div class="hidden md:flex space-x-6 items-center">
-            <a href="/" class="text-white hover:underline">HOME</a>
-            <a href="/about" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300">ABOUT</a>
+            <a href="/patient/home_patient" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300">HOME</a>
+            <a href="/patient/about_patient" class="text-white hover:underline" >ABOUT</a>
             
             <!-- User Icon with Dropdown -->
             <div class="relative">
@@ -40,7 +42,7 @@
 
     <!-- Mobile Menu (Hidden by Default) -->
     <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-[#a22133] text-white text-center py-4 space-y-4">
-        <a href="/" class="hover:underline">HOME</a>
+        <a href="/patient/home_patient" class="hover:underline">HOME</a>
         <a href="/about" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300 mx-6">ABOUT</a>
         <a href="/logout" class="hover:underline">Logout</a>
     </div>
@@ -57,7 +59,7 @@
 
      
     </script>
-</body>
+
 
 
 
@@ -118,25 +120,52 @@
     <h1 class="text-2xl font-bold text-red-700 italic  text-white p-3 rounded-md">HELLO, DONOR!</h1>
     <p class="text-gray-600 italic mt-2">FILL UP THE INFORMATION BELOW:</p>
 
-    <div class="mt-4 text-left">
-        <label class="block text-red-700 font-bold">FULL NAME:</label>
-        <input type="text" id="donor-name" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
+    <form id="frmDonate">
+        <div class="mt-4 text-left">
+            <!-- Spinner -->
+            <div class="spinner"  style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;">
+                <div class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
+                    <div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            </div>
 
-        <label class="block text-red-700 font-bold mt-2">AGE:</label>
-        <input type="number" id="donor-age" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
 
-        <label class="block text-red-700 font-bold mt-2">CITY OF RESIDENCE:</label>
-        <input type="text" id="donor-city" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
+           
+            <input type="hidden" name="donor_id" id="donor-id" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500" value="{{ session['patient_id'] }}">
 
-        <label class="block text-red-700 font-bold mt-2">CONTACT NUMBER:</label>
-        <input type="text" id="donor-contact" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
 
-        <label class="block text-red-700 font-bold mt-2">EMAIL ADDRESS:</label>
-        <input type="email" id="donor-email" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
-    </div>
+            <label class="block text-red-700 font-bold">FULL NAME:</label>
+            <input type="text" name="donor_name" id="donor-name" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
 
-    <button id="confirm-donation" class="mt-6 w-full bg-red-700 text-white font-bold py-3 rounded-md hover:bg-red-800 transition">CONFIRM</button>
-    <button id="go-back" class="mt-2 w-full bg-gray-500 text-white font-bold py-3 rounded-md hover:bg-gray-600 transition">BACK</button>
+            <label class="block text-red-700 font-bold mt-2">AGE:</label>
+            <input type="number" name="donor_age" id="donor-age" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
+
+            <label class="block text-red-700 font-bold mt-2">CITY OF RESIDENCE:</label>
+            <input type="text" name="donor_city" id="donor-city" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
+
+            <label class="block text-red-700 font-bold mt-2">CONTACT NUMBER:</label>
+            <input type="text" name="donor_contact" id="donor-contact" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
+
+            <label class="block text-red-700 font-bold mt-2">EMAIL ADDRESS:</label>
+            <input type="email" name="donor_email" id="donor-email" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
+
+            <label class="block text-red-700 font-bold mt-2">BLOOD TYPE:</label>
+            <select name="donor_bloodtype" id="donor-bloodtype" class="w-full p-3 border border-red-700 rounded-md focus:ring-2 focus:ring-red-500">
+                <option value="">Donate blood type</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+        </div>
+
+        <button type="submit" id="confirm-donation" class="mt-6 w-full bg-red-700 text-white font-bold py-3 rounded-md hover:bg-red-800 transition">CONFIRM</button>
+        <button id="go-back" class="mt-2 w-full bg-gray-500 text-white font-bold py-3 rounded-md hover:bg-gray-600 transition">BACK</button>
+    </form>
 </div>
 
 
@@ -202,22 +231,25 @@
 
 
 
-
-
-
-
-
-
-
-
-
   // Show Donor Form when Donate is clicked
         $("#donate-button").click(function() {
-            $("#result-container").fadeOut(300, function() {
-                $("#donor-form").fadeIn(300);
-            });
-        });
+            let bloodType = $("#blood-type").val();
+            if (bloodType && bloodCompatibility[bloodType]) {
+                let donateOptions = bloodCompatibility[bloodType].donate.split(", ");
 
+                let donorSelect = $("#donor-bloodtype");
+                donorSelect.empty(); // Clear previous options
+                donorSelect.append('<option value="">Donate blood type</option>');
+
+                donateOptions.forEach(type => {
+                    donorSelect.append(`<option value="${type}">${type}</option>`);
+                });
+
+                $("#result-container").fadeOut(300, function() {
+                    $("#donor-form").fadeIn(300);
+                });
+            }
+        });
         // Hide Donor Form and go back
         $("#go-back").click(function() {
             $("#donor-form").fadeOut(300, function() {
@@ -225,15 +257,101 @@
             });
         });
 
-        // Handle donation confirmation
-        $("#confirm-donation").click(function() {
-            alert("Donation details submitted! Thank you for your willingness to donate.");
+        
+
+
+
+
+
+
+
+
+
+
+
+
+            $("#frmDonate").submit(function(e) {
+            e.preventDefault();
+          
+            const donor_name = $('#donor-name').val().trim();
+            const donor_age = $('#donor-age').val().trim();
+            const donor_city = $('#donor-city').val().trim();
+            const donor_contact = $('#donor-contact').val().trim();
+            const donor_email = $('#donor-email').val().trim();
+            const donor_bloodtype = $('#donor-bloodtype').val().trim();
+            const donor_id = $('#donor-id').val().trim();
+
+            if (!donor_name) {
+                alertify.error("Please Enter Name.");
+                return;
+            }
+            if (!donor_age) {
+                alertify.error("Please Enter Age");
+                return;
+            }
+
+            if (!donor_city) {
+                alertify.error("Please Enter City");
+                return;
+            }
+
+            if (!donor_contact) {
+                alertify.error("Please Enter Contact Number");
+                return;
+            }
+            if (!donor_email) {
+                alertify.error("Please Enter Email");
+                return;
+            }
+
+            if (!donor_bloodtype) {
+                alertify.error("Please Select Bloodtype");
+                return;
+            }
+
+            $('.spinner').show();
+            $('#confirm-donation').prop('disabled', true);
+
+            // Create JSON object from form data
+            var formData = {
+                donor_id: donor_id,
+                donor_name: donor_name,
+                donor_age: donor_age,
+                donor_city: donor_city,
+                donor_contact: donor_contact,
+                donor_email: donor_email,
+                donor_bloodtype: donor_bloodtype
+            };
+
+            // Send data to the server
+            $.ajax({
+                type: "POST",
+                url: "/post_patient_donate",
+                contentType: "application/json",
+                data: JSON.stringify(formData),
+                dataType: "json",
+                success: function(response) {
+
+                    console.log(response);
+                    
+                    if (response.status == "success") {
+                        console.log(response);
+                        alertify.success(response.message);
+                        setTimeout(function() {
+                            window.location.href = "/patient/donation_success";
+                        }, 1000);
+                    } else if (response.status === "error") {
+                        alertify.error(response.message);
+                        $('.spinner').hide();
+                        $('#btnSignup').prop('disabled', false);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", status, error);
+                    alertify.error("An error occurred while logging in. Please try again.");
+                }
+            });
         });
-
-
-
-
-
     });
 </script>
 
