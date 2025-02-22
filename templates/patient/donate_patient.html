@@ -1,7 +1,12 @@
 {% include '/components/header.html' %}
+
+
+<!-- <pre>{{ session | tojson(indent=4) }}</pre> -->
+
+
+
 <body class="bg-white from-red-700 to-white min-h-screen flex flex-col">
     {% include 'PageSpinner.html' %}
-
     <!-- Navbar -->
     <nav class="bg-[#a22133] text-white py-4 px-8 flex justify-between items-center shadow-lg">
         <div class="flex items-center space-x-3">
@@ -9,17 +14,62 @@
             <span class="text-xl font-bold tracking-wide">BLOODBUDDY</span>
         </div>
 
+        <!-- Desktop Menu -->
         <div class="hidden md:flex space-x-6 items-center">
             <a href="/patient/home_patient" class="text-white hover:underline">HOME</a>
-            <a href="/patient/about_patient" class="text-white hover:underline">ABOUT</a>
-            <a href="/patient/donate_patient" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300">DONATE</a>
+            <a href="/patient/about_patient" class="text-white hover:underline" >ABOUT</a>
+            <a href="/patient/donate_patient" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300"  >DONATE</a>
+            
+            <!-- User Icon with Dropdown -->
+            <div class="relative">
+                <button id="user-menu-button" class="focus:outline-none">
+                    <span class="material-icons text-white text-3xl">account_circle</span>
+                </button>
+                <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg overflow-hidden">
+                    <a href="#" class="block px-4 py-2 hover:bg-gray-200">Profile</a>
+                    <a href="#" class="block px-4 py-2 hover:bg-gray-200">Settings</a>
+                    <a href="/logout" class="block px-4 py-2 hover:bg-gray-200">Logout</a>
+                </div>
+            </div>
         </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="md:hidden focus:outline-none" onclick="toggleMenu()">
+            <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+            </svg>
+        </button>
     </nav>
 
-    <!-- Blood List Section -->
-    <div class="container mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
-        <h2 class="text-2xl font-bold text-red-700 mb-4">Blood Donations</h2>
+    <!-- Mobile Menu (Hidden by Default) -->
+    <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-[#a22133] text-white text-center py-4 space-y-4">
+        <a href="/patient/home_patient" class="hover:underline">HOME</a>
+        <a href="/patient/about_patient" class="hover:underline">ABOUT</a>
+        <a href="/patient/donate_patient" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300 mx-6" >DONATE</a>
+        <a href="/logout" class="hover:underline">Logout</a>
+    </div>
 
+    <script>
+        function toggleMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        document.getElementById('user-menu-button').addEventListener('click', function () {
+            document.getElementById('user-dropdown').classList.toggle('hidden');
+        });
+
+
+     
+    </script>
+
+
+
+
+<!-- Blood List Section -->
+<div class="container mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
+    <h2 class="text-2xl font-bold text-red-700 mb-4">Blood Donations</h2>
+
+    <div class="overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
             <thead class="bg-red-700 text-white">
                 <tr>
@@ -28,113 +78,86 @@
                     <th class="py-3 px-6 text-left">Blood Type</th>
                     <th class="py-3 px-6 text-left">City</th>
                     <th class="py-3 px-6 text-left">Contact</th>
-                    <th class="py-3 px-6 text-left">Actions</th> <!-- Updated Column for Remove & Done Buttons -->
+                    <th class="py-3 px-6 text-left">Actions</th> 
                 </tr>
             </thead>
             <tbody id="blood-list" class="text-gray-700"></tbody>
         </table>
     </div>
+</div>
 
-    <script>
-       $(document).ready(function() {
-    function fetchBloodList() {
-        $.ajax({
-            url: "/get-blood-list?patient_id={{ session['patient_id'] }}",
-            type: "GET",
-            dataType: "json",
-            success: function(response) {
-                console.log(response);
-
-                let tableBody = "";
-                if (response.length > 0) {
-                    response.forEach((blood, index) => {
-                        let actionButtons = '';
-
-                        if (blood.donor_status === "Done") {
-                            actionButtons = `<span class="text-green-600 font-bold">Mark as Done</span>`;
-                        } else {
-                            actionButtons = `
-                                <button class="done-btn bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600" 
-                                    data-id="${blood.id}">
-                                    Done
-                                </button>
-                                <button class="remove-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" 
-                                    data-id="${blood.id}">
-                                    Remove
-                                </button>`;
-                        }
-
-                        tableBody += `
-                            <tr class="border-b" data-id="${blood.id}">
-                                <td class="py-3 px-6">${index + 1}</td>
-                                <td class="py-3 px-6">${blood.donor_name}</td>
-                                <td class="py-3 px-6">${blood.donor_bloodtype}</td>
-                                <td class="py-3 px-6">${blood.donor_city}</td>
-                                <td class="py-3 px-6">${blood.donor_contact}</td>
-                                <td class="py-3 px-6">${actionButtons}</td>
-                            </tr>`;
-                    });
-                } else {
-                    tableBody = `<tr><td colspan="6" class="text-center py-4">No blood donations found.</td></tr>`;
+<script>
+   $(document).ready(function() {
+        function fetchBloodList() {
+            $.ajax({
+                url: "/get-blood-list?patient_id={{ session['patient_id'] }}",
+                type: "GET",
+                dataType: "json",
+                success: function(response) {
+                    let tableBody = "";
+                    if (response.length > 0) {
+                        response.forEach((blood, index) => {
+                            let actionButtons = blood.donor_status === "Done" 
+                                ? `<span class='text-green-600 font-bold'>Mark as Done</span>`
+                                : `<button class='done-btn bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600' data-id='${blood.id}'>Done</button>
+                                   <button class='remove-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600' data-id='${blood.id}'>Remove</button>`;
+                            
+                            tableBody += `
+                                <tr class="border-b" data-id="${blood.id}">
+                                    <td class="py-3 px-6">${index + 1}</td>
+                                    <td class="py-3 px-6">${blood.donor_name}</td>
+                                    <td class="py-3 px-6">${blood.donor_bloodtype}</td>
+                                    <td class="py-3 px-6">${blood.donor_city}</td>
+                                    <td class="py-3 px-6">${blood.donor_contact}</td>
+                                    <td class="py-3 px-6">${actionButtons}</td>
+                                </tr>`;
+                        });
+                    } else {
+                        tableBody = `<tr><td colspan="6" class="text-center py-4">No blood donations found.</td></tr>`;
+                    }
+                    $("#blood-list").html(tableBody);
+                },
+                error: function() {
+                    $("#blood-list").html(`<tr><td colspan="6" class="text-center py-4 text-red-600">Failed to load data.</td></tr>`);
                 }
-                $("#blood-list").html(tableBody);
-            },
-            error: function(xhr, status, error) {
-                console.error("Failed to fetch data: ", error);
-                $("#blood-list").html(`<tr><td colspan="6" class="text-center py-4 text-red-600">Failed to load data.</td></tr>`);
+            });
+        }
+
+        fetchBloodList();
+
+        $(document).on("click", ".remove-btn", function() {
+            let donationId = $(this).data("id");
+            if (confirm("Are you sure you want to remove this donation?")) {
+                $.ajax({
+                    url: "/remove-blood-donation",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ donation_id: donationId }),
+                    success: function() {
+                        alert("Donation removed successfully.");
+                        fetchBloodList();
+                    }
+                });
             }
         });
-    }
 
-    // Initial load
-    fetchBloodList();
-
-    // Remove button click event
-    $(document).on("click", ".remove-btn", function() {
-        let donationId = $(this).data("id");
-
-        if (confirm("Are you sure you want to remove this donation?")) {
-            $.ajax({
-                url: "/remove-blood-donation",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({ donation_id: donationId }),
-                success: function(response) {
-                    alert("Donation removed successfully.");
-                    fetchBloodList(); // Refresh the list
-                },
-                error: function(xhr, status, error) {
-                    console.error("Failed to remove donation: ", error);
-                    alert("Failed to remove the donation.");
-                }
-            });
-        }
+        $(document).on("click", ".done-btn", function() {
+            let donationId = $(this).data("id");
+            if (confirm("Mark this donation as done?")) {
+                $.ajax({
+                    url: "/mark-blood-donation-done",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ donation_id: donationId }),
+                    success: function() {
+                        alert("Donation marked as done.");
+                        fetchBloodList();
+                    }
+                });
+            }
+        });
     });
+</script>
 
-    // Done button click event
-    $(document).on("click", ".done-btn", function() {
-        let donationId = $(this).data("id");
-
-        if (confirm("Mark this donation as done?")) {
-            $.ajax({
-                url: "/mark-blood-donation-done",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({ donation_id: donationId }),
-                success: function(response) {
-                    alert("Donation marked as done.");
-                    fetchBloodList(); // Refresh the list
-                },
-                error: function(xhr, status, error) {
-                    console.error("Failed to mark as done: ", error);
-                    alert("Failed to update donation status.");
-                }
-            });
-        }
-    });
-});
-
-    </script>
-</body>
 
 {% include '/components/footer.html' %}
