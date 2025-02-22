@@ -29,11 +29,12 @@ class Patients(Database):
     
 
     def insert_donation(self,donor_id,donor_name, donor_age, donor_city,donor_contact,donor_email,donor_bloodtype):
+        donor_status='Pending'
         try:
             self.execute_query('''
-                INSERT INTO patient_donation (donor_id, donor_name, donor_age,donor_city,donor_contact,donor_email,donor_bloodtype)
-                VALUES (%s,%s, %s, %s,%s, %s, %s)
-            ''', (donor_id,donor_name, donor_age, donor_city,donor_contact,donor_email,donor_bloodtype))
+                INSERT INTO patient_donation (donor_id, donor_name, donor_age,donor_city,donor_contact,donor_email,donor_bloodtype,donor_status)
+                VALUES (%s,%s, %s, %s,%s, %s, %s,%s)
+            ''', (donor_id,donor_name, donor_age, donor_city,donor_contact,donor_email,donor_bloodtype,donor_status))
             print("✅ Donation Succesfully Recorded")
             return True
         except psycopg2.Error as e:
@@ -64,8 +65,29 @@ class Patients(Database):
 
     def fetchAllDonation(self):
         """Fetches all donation records from patient_donation."""
-        rows = self.fetch_all("SELECT * FROM patient_donation")
+        rows = self.fetch_all("SELECT * FROM patient_donation where donor_status='Pending'")
         return rows if rows else []  # Return an empty list if no records exist
+    
+
+    def fetchDonorDonation(self, donor_id):
+        """Fetches all donation records from patient_donation for a specific donor."""
+        query = "SELECT * FROM patient_donation WHERE donor_id = %s" 
+        rows = self.fetch_all(query, (donor_id,))
+        return rows if rows else []  # Return an empty list if no records exist
+    
+    
+    def deleteDonation(self, donation_id):
+        """Deletes a donation record from patient_donation using donation_id."""
+        query = "DELETE FROM patient_donation WHERE id = %s"
+        success = self.execute_query(query, (donation_id,))
+        return success  # Returns True if deletion was successful, False otherwise
+
+    def markDonationAsDone(self, donation_id):
+        """Marks a donation as done in the database."""
+        query = "UPDATE patient_donation SET donor_status = 'Done' WHERE id = %s"
+        success = self.execute_query(query, (donation_id,))
+        return success  # Returns True if successful
+
 
         
 

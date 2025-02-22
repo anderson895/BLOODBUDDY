@@ -29,6 +29,13 @@ def donation_success():
 @app.route('/patient/about_patient')
 def about_patient():
     return render_template('/patient/about_patient.html')
+    
+
+    
+@app.route('/patient/donate_patient')
+def donate_patient():
+    return render_template('/patient/donate_patient.html')
+
 
 
 @app.route('/patient/home_patient')
@@ -37,6 +44,44 @@ def home_patient():
         return redirect(url_for('logout')) 
     return render_template('patient/home_patient.html', session=session)
 
+
+
+@app.route('/get-blood-list', methods=['GET'])
+def get_blood_list():
+    patient_id = session.get('patient_id')
+    if not patient_id:
+        return jsonify({"error": "Patient ID is missing"}), 400
+
+    data = Patients().fetchDonorDonation(patient_id)
+    return jsonify(data)  # Return JSON response
+
+
+
+@app.route('/remove-blood-donation', methods=['POST'])
+def remove_blood_donation():
+    data = request.get_json()
+    donation_id = data.get('donation_id')
+    if not donation_id:
+        return jsonify({"error": "Missing donation ID"}), 400
+    success = Patients().deleteDonation(donation_id)
+    if success:
+        return jsonify({"message": "Donation removed successfully"}), 200
+    else:
+        return jsonify({"error": "Failed to remove donation"}), 500
+    
+
+
+@app.route('/mark-blood-donation-done', methods=['POST'])
+def mark_blood_donation_done():
+    data = request.get_json()
+    donation_id = data.get('donation_id')
+    if not donation_id:
+        return jsonify({"error": "Missing donation ID"}), 400
+    success = Patients().markDonationAsDone(donation_id)
+    if success:
+        return jsonify({"message": "Donation marked as done."}), 200
+    else:
+        return jsonify({"error": "Failed to update status."}), 500
 
 
 @app.route('/logout')
