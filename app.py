@@ -83,13 +83,12 @@ def post_patient_donate():
 
 
 
+# /get-donors
 
-
-
-
-
-
-
+@app.route('/get-donors', methods=['GET'])
+def fetch_donors():
+    data = Patients().fetchAllDonation()
+    return jsonify(data)
 
 
 

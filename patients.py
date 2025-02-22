@@ -60,6 +60,14 @@ class Patients(Database):
         except psycopg2.Error as e:
             print("❌ Error creating account:", e)
             return False
+        
+
+    def fetchAllDonation(self):
+        """Fetches all donation records from patient_donation."""
+        rows = self.fetch_all("SELECT * FROM patient_donation")
+        return rows if rows else []  # Return an empty list if no records exist
+
+        
 
     def hash_password(self, password):
         """Hashes the password using SHA-256."""

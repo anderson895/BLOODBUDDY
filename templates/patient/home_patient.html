@@ -82,7 +82,7 @@
                 <option value="O-">O-</option>
             </select>
         </div>
-        <p id="error-message" class="text-red-600 text-sm hidden mt-2">Please select a blood type.</p>
+ 
         <button id="check-compatibility" class="mt-6 w-full bg-red-700 text-white font-bold py-3 rounded-md hover:bg-red-800 transition disabled:opacity-50" disabled>CHECK COMPATIBILITY</button>
     </div>
 
@@ -101,7 +101,8 @@
         <p class="mt-4 italic text-gray-600">Would you like to donate or receive blood?</p>
         <div class="mt-4 flex justify-center space-x-4">
             <button id="donate-button" class="bg-red-700 text-white font-bold py-2 px-4 rounded-md hover:bg-red-800 transition">DONATE</button>
-            <button class="bg-red-700 text-white font-bold py-2 px-4 rounded-md hover:bg-red-800 transition">RECEIVE</button>
+            <button id="receive-button" class="bg-red-700 text-white font-bold py-2 px-4 rounded-md hover:bg-red-800 transition">RECEIVE</button>
+
             <button id="reset" class="bg-gray-500 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-600 transition">NOT TODAY</button>
         </div>
     </div>
@@ -164,13 +165,35 @@
         </div>
 
         <button type="submit" id="confirm-donation" class="mt-6 w-full bg-red-700 text-white font-bold py-3 rounded-md hover:bg-red-800 transition">CONFIRM</button>
-        <button id="go-back" class="mt-2 w-full bg-gray-500 text-white font-bold py-3 rounded-md hover:bg-gray-600 transition">BACK</button>
+        <button type="button" id="go-back" class="mt-2 w-full bg-gray-500 text-white font-bold py-3 rounded-md hover:bg-gray-600 transition">BACK</button>
     </form>
 </div>
 
 
 
+<div style="display:none;" class="w-full max-w-4xl p-6 bg-white shadow-lg rounded-lg">
+    <div class="text-center mb-6">
+        <div class="bg-red-700 text-white text-xl font-bold italic p-3 rounded-lg inline-block">
+            HELLO, RECIPIENT!
+        </div>
+        <p class="mt-2 italic text-red-700">HERE ARE THE LIST OF BLOOD DONORS THAT MATCH YOUR BLOOD TYPE:</p>
+       
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="border border-red-500 p-4 rounded-lg text-red-700 text-center italic">
+            <span class="font-bold">NAME OF DONOR</span><br>
+            AGE <br>
+            CITY OF RESIDENCE <br>
+            CONTACT NUMBER <br>
+            EMAIL ADDRESS
+        </div>
+    </div>
 
+    <div class="text-center mt-6">
+       <a href="/patient/home_patient"><button class="bg-red-700 text-white px-6 py-2 rounded-lg font-bold">DONE</button></a> 
+    </div>
+</div>
 
 </div>
 <!-- END PAGE CONTENT -->
@@ -202,7 +225,7 @@
         $("#blood-type").change(function() {
             let bloodType = $(this).val();
             $("#check-compatibility").prop("disabled", bloodType === "");
-            $("#error-message").hide();
+            
         });
 
         // Check blood compatibility
@@ -215,9 +238,7 @@
                 $("#form-container").fadeOut(300, function() {
                     $("#result-container").fadeIn(300);
                 });
-            } else {
-                $("#error-message").fadeIn();
-            }
+            } 
         });
 
         // Reset form
@@ -257,103 +278,87 @@
             });
         });
 
-        
 
+// Show recipient list when "RECEIVE" is clicked
+$("#receive-button").click(function () {
+    let bloodType = $("#blood-type").val().trim().toUpperCase();
 
+    console.log("📌 Selected Blood Type:", bloodType);
+    if (!bloodType || !bloodCompatibility[bloodType]) {
+        alert("Please select a valid blood type.");
+        return;
+    }
 
+    let receiveOptions = bloodCompatibility[bloodType].receive.split(", ").map(bt => bt.trim().toUpperCase());
+    console.log("📌 Can Receive From:", receiveOptions);
 
+    // AJAX request to fetch donors from the server
+    $.ajax({
+        url: "/get-donors",
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+            console.log("✅ Full Server Response:", JSON.stringify(response, null, 2));
 
+            // Ensure the response is an array
+            let donors = Array.isArray(response) ? response : [];
 
-
-
-
-
-
-
-            $("#frmDonate").submit(function(e) {
-            e.preventDefault();
-          
-            const donor_name = $('#donor-name').val().trim();
-            const donor_age = $('#donor-age').val().trim();
-            const donor_city = $('#donor-city').val().trim();
-            const donor_contact = $('#donor-contact').val().trim();
-            const donor_email = $('#donor-email').val().trim();
-            const donor_bloodtype = $('#donor-bloodtype').val().trim();
-            const donor_id = $('#donor-id').val().trim();
-
-            if (!donor_name) {
-                alertify.error("Please Enter Name.");
-                return;
-            }
-            if (!donor_age) {
-                alertify.error("Please Enter Age");
-                return;
-            }
-
-            if (!donor_city) {
-                alertify.error("Please Enter City");
+            if (!donors.length) {
+                console.error("❌ No donors found in response.");
+                alert("Error: No donor data received.");
                 return;
             }
 
-            if (!donor_contact) {
-                alertify.error("Please Enter Contact Number");
-                return;
-            }
-            if (!donor_email) {
-                alertify.error("Please Enter Email");
-                return;
-            }
+            // Extract donor blood types
+            let bloodTypesList = donors.map(donor => donor.donor_bloodtype ? donor.donor_bloodtype.trim().toUpperCase() : null);
+            console.log("📌 Available Donors Blood Types:", bloodTypesList);
 
-            if (!donor_bloodtype) {
-                alertify.error("Please Select Bloodtype");
-                return;
-            }
+            // Filtering donors based on blood type compatibility
+            let filteredDonors = donors.filter(donor => {
+                if (!donor.donor_bloodtype) return false;
+                let donorBloodType = donor.donor_bloodtype.trim().toUpperCase();
+                console.log(`🩸 Checking Donor: ${donor.donor_name} | Type: ${donorBloodType}`);
 
-            $('.spinner').show();
-            $('#confirm-donation').prop('disabled', true);
-
-            // Create JSON object from form data
-            var formData = {
-                donor_id: donor_id,
-                donor_name: donor_name,
-                donor_age: donor_age,
-                donor_city: donor_city,
-                donor_contact: donor_contact,
-                donor_email: donor_email,
-                donor_bloodtype: donor_bloodtype
-            };
-
-            // Send data to the server
-            $.ajax({
-                type: "POST",
-                url: "/post_patient_donate",
-                contentType: "application/json",
-                data: JSON.stringify(formData),
-                dataType: "json",
-                success: function(response) {
-
-                    console.log(response);
-                    
-                    if (response.status == "success") {
-                        console.log(response);
-                        alertify.success(response.message);
-                        setTimeout(function() {
-                            window.location.href = "/patient/donation_success";
-                        }, 1000);
-                    } else if (response.status === "error") {
-                        alertify.error(response.message);
-                        $('.spinner').hide();
-                        $('#btnSignup').prop('disabled', false);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX Error:", status, error);
-                    alertify.error("An error occurred while logging in. Please try again.");
-                }
+                return receiveOptions.includes(donorBloodType);
             });
-        });
+
+            console.log("✅ Matching Donors:", filteredDonors);
+
+            let donorContainer = $(".grid-cols-1");
+            donorContainer.empty();
+
+            if (filteredDonors.length > 0) {
+                let donorHTML = filteredDonors.map(donor => `
+                    <div class="border border-red-500 p-4 rounded-lg text-red-700 text-center italic">
+                        <span class="font-bold">${donor.donor_name}</span><br>
+                        Age: ${donor.donor_age} <br>
+                        City: ${donor.donor_city} <br>
+                        Contact: ${donor.donor_contact} <br>
+                        Email: ${donor.donor_email}
+                    </div>
+                `).join("");
+
+                donorContainer.append(donorHTML);
+            } else {
+                donorContainer.append(`<p class="text-red-700 italic">No matching donors found.</p>`);
+            }
+
+            $("#result-container").fadeOut(300, function () {
+                $(".w-full.max-w-4xl").fadeIn(300);
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error("❌ AJAX Error:", status, error);
+            alert("Failed to fetch donor data. Please try again.");
+        }
+    });
+});
+
+           
     });
 </script>
 
 
 {% include '/components/footer.html' %}
+
+<script src="/static/js/donate_patient.js"></script>
