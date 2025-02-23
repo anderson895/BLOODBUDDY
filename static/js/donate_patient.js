@@ -120,6 +120,7 @@ $.ajax({
             let donorHTML = filteredDonors.map(donor => `
                 <div class="border border-red-500 p-4 rounded-lg text-red-700 text-center italic">
                     <span class="font-bold">${donor.donor_name}</span><br>
+                    Blood Type: ${donor.donor_bloodtype} <br>
                     Age: ${donor.donor_age} <br>
                     City: ${donor.donor_city} <br>
                     Contact: ${donor.donor_contact} <br>
