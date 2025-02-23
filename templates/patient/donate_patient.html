@@ -96,7 +96,7 @@
                     if (response.length > 0) {
                         response.forEach((blood, index) => {
                             let actionButtons = blood.donor_status === "Done" 
-                                ? `<span class='text-green-600 font-bold'>Mark as Done</span>`
+                                ? `<span class='text-green-600 font-bold'>Marked as Done</span>`
                                 : `<button class='done-btn bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600' data-id='${blood.id}'>Done</button>
                                    <button class='remove-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600' data-id='${blood.id}'>Remove</button>`;
                             
