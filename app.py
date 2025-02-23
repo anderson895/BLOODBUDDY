@@ -30,6 +30,9 @@ def donation_success():
 def about_patient():
     return render_template('/patient/about_patient.html')
     
+@app.route('/patient/blood_typing')
+def blood_typing():
+    return render_template('/patient/blood_typing.html')
 
     
 @app.route('/patient/donate_patient')

@@ -13,12 +13,21 @@
             <img src="/static/ELEMENTS/LOGO.png" alt="BloodBuddy Logo" class="h-10">
             <span class="text-xl font-bold tracking-wide">BLOODBUDDY</span>
         </div>
-
+    
         <!-- Desktop Menu -->
         <div class="hidden md:flex space-x-6 items-center">
-            <a href="/patient/home_patient" class="text-white hover:underline">HOME</a>
-            <a href="/patient/about_patient" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300"  >ABOUT</a>
-            <a href="/patient/donate_patient" class="text-white hover:underline" >DONATE</a>
+            <a href="/patient/home_patient" class="block px-4 py-2 hover:bg-gray-200">HOME</a>
+            
+            <!-- About Dropdown -->
+            <div class="relative">
+                <button id="about-button" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300">ABOUT</button>
+                <div id="about-dropdown" class="hidden absolute left-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg overflow-hidden">
+                    <a href="/patient/about_patient" class="block px-4 py-2 hover:bg-gray-200">THE WEBSITE</a>
+                    <a href="/patient/blood_typing" class="block px-4 py-2 hover:bg-gray-200">BLOOD TYPING</a>
+                </div>
+            </div>
+            
+            <a href="/patient/donate_patient" class="text-white hover:underline">DONATE</a>
             
             <!-- User Icon with Dropdown -->
             <div class="relative">
@@ -26,12 +35,11 @@
                     <span class="material-icons text-white text-3xl">account_circle</span>
                 </button>
                 <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg overflow-hidden">
-                    
                     <a href="/logout" class="block px-4 py-2 hover:bg-gray-200">Logout</a>
                 </div>
             </div>
         </div>
-
+    
         <!-- Mobile Menu Button -->
         <button class="md:hidden focus:outline-none" onclick="toggleMenu()">
             <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -39,11 +47,14 @@
             </svg>
         </button>
     </nav>
+    
+   
 
     <!-- Mobile Menu (Hidden by Default) -->
     <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-[#a22133] text-white text-center py-4 space-y-4">
         <a href="/patient/home_patient" class="hover:underline">HOME</a>
-        <a href="/patient/about_patient" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300 mx-6">ABOUT</a>
+        <a href="/patient/about_patient" class="hover:underline">THE WEBSITE</a>
+        <a href="/patient/blood_typing" class="hover:underline">BLOOD TYPING</a>
         <a href="/patient/donate_patient" class="hover:underline">DONATE</a>
         <a href="/logout" class="hover:underline">Logout</a>
     </div>
@@ -57,7 +68,10 @@
             document.getElementById('user-dropdown').classList.toggle('hidden');
         });
 
-
+        document.getElementById("about-button").addEventListener("click", function() {
+            var dropdown = document.getElementById("about-dropdown");
+            dropdown.classList.toggle("hidden");
+        });
      
     </script>
 
@@ -66,22 +80,17 @@
 
 
 <!--START PAGE CONTENT  -->
-<div class="flex justify-center items-center h-screen">
+<div class="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+    <div class="max-w-3xl rounded-2xl p-8 text-center">
+        <h2 class="text-2xl md:text-3xl font-bold italic text-red-700">ABOUT BLOODBUDDY</h2>
+        <p class="mt-4 text-red-700">
+            BloodBuddy is a website developed by Medical Technology students from National University - Mall of Asia.
+            This was developed to help users determine their blood
+            type and compatibility for blood donation or transfusion.
+            Specifically, it can guide blood donors to find suitable recipients. In addition, it can also help those who need blood to find compatible blood donors.
+        </p>
 
-        <div class="max-w-2xl text-center p-6">
-            <h2 class="text-xl md:text-2xl font-bold italic text-red-700">ABOUT BLOODBUDDY</h2>
-            <p class="mt-4 text-gray-700">
-                <span class="font-bold text-red-700">BloodBuddy</span> is a website developed by Medical Technology students from 
-                National University - Mall of Asia. This was developed to help users determine their 
-                <span class="font-bold text-red-700">blood type and compatibility for blood donation or transfusion.</span>
-            </p>
-            <p class="mt-4 text-gray-700">
-                Specifically, it can guide blood donors to find suitable recipients. In addition, it can also help those who 
-                need blood to find compatible blood donors.
-            </p>
-        </div>
-  
+    </div>
 </div>
-
 <!--END PAGE CONTENT  -->
 {% include '/components/footer.html' %}

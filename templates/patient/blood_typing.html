@@ -16,11 +16,11 @@
     
         <!-- Desktop Menu -->
         <div class="hidden md:flex space-x-6 items-center">
-            <a href="/patient/home_patient" class="text-white hover:underline">HOME</a>
+            <a href="/patient/home_patient" class="block px-4 py-2 hover:bg-gray-200">HOME</a>
             
             <!-- About Dropdown -->
             <div class="relative">
-                <button id="about-button" class="text-white hover:underline focus:outline-none">ABOUT</button>
+                <button id="about-button" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300">ABOUT</button>
                 <div id="about-dropdown" class="hidden absolute left-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg overflow-hidden">
                     <a href="/patient/about_patient" class="block px-4 py-2 hover:bg-gray-200">THE WEBSITE</a>
                     <a href="/patient/blood_typing" class="block px-4 py-2 hover:bg-gray-200">BLOOD TYPING</a>
@@ -77,14 +77,32 @@
 
 
 
-
 <!-- START PAGE CONTENT -->
-<div class="flex flex-col items-center justify-center min-h-screen text-center p-6 bg-white shadow-lg rounded-lg">
-    <img src="/static/ELEMENTS/10.png" alt="Blood Buddy" class="w-24 mx-auto">
-    <h1 class="text-2xl font-bold text-red-600 mt-4">THANK YOU OUR BLOOD BUDDY</h1>
-    <p class="text-red-500 italic mt-2">FOR REGISTERING AS A BLOOD DONOR! REGULARLY CHECK YOUR EMAIL AND SMS FOR UPDATES.</p>
+<!-- START PAGE CONTENT -->
+<div class="flex justify-center items-center min-h-screen bg-gray-100 p-6">
+    <div class="max-w-3xl  rounded-2xl p-10 text-center">
+        <h2 class="text-2xl md:text-3xl font-bold italic text-red-700">WHAT HAPPENS IF BLOOD TYPES DON’T MATCH?</h2>
+        <p class="mt-6 text-red-700">
+            It’s important to get the right donor blood type if you need a transfusion. If an antigen is introduced into your body that isn’t there normally, your system will identify it as an intruder. The immune system will go into attack mode, and antibodies will be produced to help fight off the unfamiliar visitors (Berthold, 2018).
+        </p>
+
+        <h2 class="text-2xl md:text-3xl font-bold italic text-red-700 mt-16">WHY IS RH FACTOR IMPORTANT?</h2>
+        <p class="mt-6 text-red-700">
+            The Rhesus factor, or Rh factor, is a protein that may be present on the surface of red blood cells (RBCs). If RBCs contain the Rh antigen, they are Rh-positive; if not, they are Rh-negative. It is important to know a person’s Rh factor to ensure that they receive compatible blood (Morales-Brown, 2021).
+        </p>
+
+        <h2 class="text-2xl md:text-3xl font-bold italic text-red-700 mt-16">WHY O- IS THE UNIVERSAL DONOR?</h2>
+        <p class="mt-6 text-red-700">
+            The absence of the A and B antigens is represented with the letter O, and the absence of the Rh factor is signified with a negative sign. Type O blood can be given to patients without triggering a response from their immune system. That’s why people who have blood type O negative are referred to as universal donors (Lifeblood, 2023).
+        </p>
+
+        <h2 class="text-2xl md:text-3xl font-bold italic text-red-700 mt-16">WHY AB+ IS THE UNIVERSAL RECIPIENT?</h2>
+        <p class="mt-6 text-red-700">
+            People with type AB+ blood are universal recipients because they have no antibodies to A, B, or Rh in their blood and can receive red blood cells from a donor of any blood type (Chargé & Hodgkinson, 2017).
+        </p>
+    </div>
 </div>
 
 
-
-{% include 'components/footer.html' %}
+<!--END PAGE CONTENT  -->
+{% include '/components/footer.html' %}
