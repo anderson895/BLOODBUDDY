@@ -11,7 +11,16 @@
         <!-- Desktop Menu -->
         <div class="hidden md:flex space-x-6 items-center">
             <a href="/" class="text-white hover:underline">HOME</a>
-            <a href="/about" class="text-white hover:underline">ABOUT</a>
+
+             <!-- About Dropdown -->
+             <div class="relative">
+                <button id="about-button"  class="text-white hover:underline" >ABOUT</button>
+                <div id="about-dropdown" class="hidden absolute left-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg overflow-hidden">
+                    <a href="/about" class="block px-4 py-2 hover:bg-gray-200">THE WEBSITE</a>
+                    <a href="/typing" class="block px-4 py-2 hover:bg-gray-200">BLOOD TYPING</a>
+                </div>
+            </div>
+
             <a href="/login" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300">LOGIN</a>
         </div>
 
@@ -23,15 +32,27 @@
         </button>
     </nav>
 
-    <!-- Mobile Menu (Hidden by Default) -->
+        <!-- Mobile Menu (Hidden by Default) -->
     <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-[#a22133] text-white text-center py-4 space-y-4">
         <a href="/" class="hover:underline">HOME</a>
-        <a href="/about" class="hover:underline">ABOUT</a>
+        <a href="/about"  class="hover:underline" >THE WEBSITE</a>
+        <a href="/typing" class="hover:underline">BLOOD TYPING</a>
         <a href="/login" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300 mx-6">LOGIN</a>
     </div>
 
 
 
+    <script>
+        function toggleMenu() {
+               document.getElementById('mobile-menu').classList.toggle('hidden');
+           }
+   
+         
+           document.getElementById("about-button").addEventListener("click", function() {
+               var dropdown = document.getElementById("about-dropdown");
+               dropdown.classList.toggle("hidden");
+           });
+   </script>
 
     <!--START PAGE CONTENT  -->
 <div class="flex justify-center items-center h-screen">

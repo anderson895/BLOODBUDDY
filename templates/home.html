@@ -11,7 +11,19 @@
         <!-- Desktop Menu -->
         <div class="hidden md:flex space-x-6 items-center">
             <a href="/" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300">HOME</a>
-            <a href="/about" class="text-white hover:underline">ABOUT</a>
+
+             <!-- About Dropdown -->
+             <div class="relative">
+                <button id="about-button" class="text-white hover:underline">ABOUT</button>
+                <div class="relative">
+                    <div id="about-dropdown" class="hidden absolute top-full left-0 w-48 bg-white text-black shadow-lg rounded-lg overflow-hidden z-50">
+                        <a href="/about" class="block px-4 py-2 hover:bg-gray-200">THE WEBSITE</a>
+                        <a href="/typing" class="block px-4 py-2 hover:bg-gray-200">BLOOD TYPING</a>
+                    </div>
+                </div>
+                
+            </div>
+
             <a href="/login" class="text-white hover:underline">LOGIN</a>
         </div>
 
@@ -23,15 +35,25 @@
         </button>
     </nav>
 
-    <!-- Mobile Menu (Hidden by Default) -->
-    <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-[#a22133] text-white text-center py-4 space-y-4">
-      
-        <a href="/" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300 mx-6">HOME</a>
-        <a href="/about" class="hover:underline">ABOUT</a>
-        <a href="/login" class="hover:underline">LOGIN</a>
-    </div>
+   <!-- Mobile Menu (Hidden by Default) -->
+ <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-[#a22133] text-white text-center py-4 space-y-4">
+    <a href="/" class="bg-pink-200 text-red-800 px-5 py-2 rounded-full font-semibold shadow-md hover:bg-pink-300 mx-6">HOME</a>
+    <a href="/about"  class="hover:underline" >THE WEBSITE</a>
+    <a href="/typing" class="hover:underline">BLOOD TYPING</a>
+    <a href="/login" class="hover:underline">LOGIN</a>
+</div>
 
+<script>
+    function toggleMenu() {
+           document.getElementById('mobile-menu').classList.toggle('hidden');
+       }
 
+     
+       document.getElementById("about-button").addEventListener("click", function() {
+           var dropdown = document.getElementById("about-dropdown");
+           dropdown.classList.toggle("hidden");
+       });
+</script>
 
     <!--START PAGE CONTENT  -->
     <!-- Hero Section -->

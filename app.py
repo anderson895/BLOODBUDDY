@@ -16,6 +16,12 @@ def login():
 def about():
     return render_template('about.html')
 
+
+@app.route('/typing')
+def typing():
+    return render_template('typing.html')
+
+
 @app.route('/signup')
 def signup():
     return render_template('signup.html')
