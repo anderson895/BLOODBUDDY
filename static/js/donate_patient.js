@@ -83,7 +83,7 @@ console.log("📌 Can Receive From:", receiveOptions);
 
 // AJAX request to fetch donors from the server
 $.ajax({
-    url: "/get-donors",
+    url: "/get-donors?patient_id={{ session['patient_id'] }}",
     type: "GET",
     dataType: "json",
     success: function (response) {

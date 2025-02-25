@@ -63,10 +63,13 @@ class Patients(Database):
             return False
         
 
-    def fetchAllDonation(self):
-        """Fetches all donation records from patient_donation."""
-        rows = self.fetch_all("SELECT * FROM patient_donation where donor_status='Pending'")
-        return rows if rows else []  # Return an empty list if no records exist
+    def fetchAllDonation(self, patient_id):
+        """Fetches all donation records from patient_donation for a given patient ID."""
+        query = "SELECT * FROM patient_donation WHERE donor_status = %s AND donor_id != %s"
+        params = ("Pending", patient_id)
+        rows = self.fetch_all(query, params)
+        return rows if rows else []
+
     
 
     def fetchDonorDonation(self, donor_id):

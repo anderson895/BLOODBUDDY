@@ -60,14 +60,7 @@ def home_patient():
 
 
 
-@app.route('/get-blood-list', methods=['GET'])
-def get_blood_list():
-    patient_id = session.get('patient_id')
-    if not patient_id:
-        return jsonify({"error": "Patient ID is missing"}), 400
 
-    data = Patients().fetchDonorDonation(patient_id)
-    return jsonify(data)  # Return JSON response
 
 
 
@@ -141,12 +134,22 @@ def post_patient_donate():
 
 
 
+@app.route('/get-blood-list', methods=['GET'])
+def get_blood_list():
+    patient_id = session.get('patient_id')
+    if not patient_id:
+        return jsonify({"error": "Patient ID is missing"}), 400
+
+    data = Patients().fetchDonorDonation(patient_id)
+    return jsonify(data)  # Return JSON response
+
 
 # /get-donors
 
 @app.route('/get-donors', methods=['GET'])
 def fetch_donors():
-    data = Patients().fetchAllDonation()
+    patient_id = session.get('patient_id')
+    data = Patients().fetchAllDonation(patient_id)
     return jsonify(data)
 
 
