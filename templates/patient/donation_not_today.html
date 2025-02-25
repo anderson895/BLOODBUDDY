@@ -1,0 +1,90 @@
+{% include '/components/header.html' %}
+
+
+<!-- <pre>{{ session | tojson(indent=4) }}</pre> -->
+
+
+
+<body class="bg-white from-red-700 to-white min-h-screen flex flex-col">
+    {% include 'PageSpinner.html' %}
+    <!-- Navbar -->
+    <nav class="bg-[#a22133] text-white py-4 px-8 flex justify-between items-center shadow-lg">
+        <div class="flex items-center space-x-3">
+            <img src="/static/ELEMENTS/LOGO.png" alt="BloodBuddy Logo" class="h-10">
+            <span class="text-xl font-bold tracking-wide">BLOODBUDDY</span>
+        </div>
+    
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex space-x-6 items-center">
+            <a href="/patient/home_patient" class="text-white hover:underline">HOME</a>
+            
+            <!-- About Dropdown -->
+            <div class="relative">
+                <button id="about-button" class="text-white hover:underline focus:outline-none">ABOUT</button>
+                <div id="about-dropdown" class="hidden absolute left-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg overflow-hidden">
+                    <a href="/patient/about_patient" class="block px-4 py-2 hover:bg-gray-200">THE WEBSITE</a>
+                    <a href="/patient/blood_typing" class="block px-4 py-2 hover:bg-gray-200">BLOOD TYPING</a>
+                </div>
+            </div>
+            
+            <a href="/patient/donate_patient" class="text-white hover:underline">DONATE</a>
+            
+            <!-- User Icon with Dropdown -->
+            <div class="relative">
+                <button id="user-menu-button" class="focus:outline-none">
+                    <span class="material-icons text-white text-3xl">account_circle</span>
+                </button>
+                <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg overflow-hidden">
+                    <a href="/logout" class="block px-4 py-2 hover:bg-gray-200">Logout</a>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Mobile Menu Button -->
+        <button class="md:hidden focus:outline-none" onclick="toggleMenu()">
+            <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+            </svg>
+        </button>
+    </nav>
+    
+   
+
+    <!-- Mobile Menu (Hidden by Default) -->
+    <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-[#a22133] text-white text-center py-4 space-y-4">
+        <a href="/patient/home_patient" class="hover:underline">HOME</a>
+        <a href="/patient/about_patient" class="hover:underline">THE WEBSITE</a>
+        <a href="/patient/blood_typing" class="hover:underline">BLOOD TYPING</a>
+        <a href="/patient/donate_patient" class="hover:underline">DONATE</a>
+        <a href="/logout" class="hover:underline">Logout</a>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        document.getElementById('user-menu-button').addEventListener('click', function () {
+            document.getElementById('user-dropdown').classList.toggle('hidden');
+        });
+
+        document.getElementById("about-button").addEventListener("click", function() {
+            var dropdown = document.getElementById("about-dropdown");
+            dropdown.classList.toggle("hidden");
+        });
+     
+    </script>
+
+
+
+
+<!-- START PAGE CONTENT -->
+<div class="flex flex-col items-center justify-center min-h-screen text-center p-6 bg-white shadow-lg rounded-lg">
+    <img src="/static/ELEMENTS/10.png" alt="Blood Buddy" class="w-24 mx-auto">
+    <h1 class="text-2xl font-bold text-red-600 mt-4">THANK YOU OUR BLOOD BUDDY</h1>
+    <p class="text-red-500 italic mt-2">You may consider visiting us again when you're ready to donate or recieve blood!</p>
+</div>
+
+
+
+{% include 'components/footer.html' %}

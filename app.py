@@ -32,6 +32,11 @@ def donation_success():
     return render_template('/patient/donation_success.html')
 
 
+@app.route('/patient/donation_not_today')
+def donation_not_today():
+    return render_template('/patient/donation_not_today.html')
+
+
 @app.route('/patient/about_patient')
 def about_patient():
     return render_template('/patient/about_patient.html')
